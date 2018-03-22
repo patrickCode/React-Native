@@ -1,0 +1,39 @@
+{
+  "name": "helloworldxppoc",
+  "version": "2.0.0",
+  "description": "",
+  "main": "src/App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "web-watch": "webpack --progress --colors --watch",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "android": "node node_modules/react-native/local-cli/cli.js run-android",
+    "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
+    "refreshVSToken": "vsts-npm-auth -config reactpoc.npmrc"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-loader": "^7.0.0",
+    "babel-preset-react-native": "1.9.2",
+    "source-map-loader": "^0.1.6",
+    "webpack": "2.2.1"
+  },
+  "peerDependencies": {
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "react-native": "0.53.0",
+    "react-native-windows": "^0.51.0-rc.1",
+    "reactxp": "^1.0.0"
+  },
+  "dependencies": {
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "react-native": "0.53.0",
+    "react-native-windows": "^0.51.0-rc.1",
+    "reactxp": "^1.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://microsoftit.pkgs.visualstudio.com/_packaging/MSIT.FXP.NpmPackages/npm/registry/"
+  }
+}

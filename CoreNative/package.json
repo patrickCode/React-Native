@@ -1,0 +1,18 @@
+{
+  "name": "greetingspoc",
+  "version": "2.0.0",
+  "description": "Greetings library ",
+  "main": "greeting.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "refreshVSToken": "vsts-npm-auth -config reactpoc.npmrc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "16.3.0-alpha.1"
+  },
+  "publishConfig": {
+    "registry": "https://microsoftit.pkgs.visualstudio.com/_packaging/MSIT.FXP.NpmPackages/npm/registry/"
+  }
+}

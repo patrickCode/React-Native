@@ -286,3 +286,7 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+Basic_Controls/android/
+CoreReactXP/android/
+CoreReactXP/ios/
+CoreReactXP/dist/
