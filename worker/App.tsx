@@ -84,8 +84,15 @@ export class Application extends Component<Props, any> {
       });
   }
 
+  private showDummyBgJobStatus() {
+    AsyncStorage.getItem("dummyJobStatus")
+      .then((status) => {
+        alert(status);
+      });
+  }
+
   private async CheckData(timeout: number = 25000) {
-    let probe = 1000;
+    let probe = 200;
 
     let waitForData = (timeout: number) => {
       new Promise((resolve, reject) => {
@@ -123,9 +130,13 @@ export class Application extends Component<Props, any> {
         <TouchableHighlight onPress={this.scheduleSync.bind(this)}>
           <Text>Start BG Sync</Text>
         </TouchableHighlight>
+        <TouchableHighlight onPress={this.showDummyBgJobStatus.bind(this)}>
+          <Text>Show BG Status of Dummy Jobs</Text>
+        </TouchableHighlight>
         <Text>Queue State - {this.state.queueState}</Text>
         <Text>Queue Seed - {this.state.queueNumber}</Text>
         <Text>BG Status - {this.state.bgState}</Text>
+
         <FlatList
           data={this.state.questions}
           keyExtractor={(item: any) => item.id}

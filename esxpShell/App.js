@@ -105,7 +105,7 @@ class App extends Component<Props> {
           ESXP Shell
         </Text>
         <Text style={styles.instructions}>
-          This was a live demo
+          I am giving Live Demo.
         </Text>
         <Text style={styles.instructions}>
           {instructions}

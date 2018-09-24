@@ -1,0 +1,5 @@
+rootProject.name = 'notificationapp'
+
+include ':app'
+include ':react-native-azurenotificationhub'
+project (':react-native-azurenotificationhub').projectDir = file('../node_modules/react-native-azurenotificationhub/android')
