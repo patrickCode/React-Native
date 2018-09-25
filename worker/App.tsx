@@ -91,6 +91,10 @@ export class Application extends Component<Props, any> {
       });
   }
 
+  private showBgStatus() {
+    this.bgSync.CheckStatus();
+  }
+
   private async CheckData(timeout: number = 25000) {
     let probe = 200;
 
@@ -122,8 +126,8 @@ export class Application extends Component<Props, any> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>React Native Workers</Text>
-        <TextInput placeholder="Enter page number" keyboardType="number-pad" onChange={this.onPageNumberChange.bind(this)} />
+        <Text style={styles.welcome}>React Native Workers (BG and Foreground Sync)</Text>
+        {/* <TextInput placeholder="Enter page number" keyboardType="number-pad" onChange={this.onPageNumberChange.bind(this)} /> */}
         <TouchableHighlight onPress={this.queueJob.bind(this)}>
           <Text>Queue new Job</Text>
         </TouchableHighlight>
@@ -132,6 +136,9 @@ export class Application extends Component<Props, any> {
         </TouchableHighlight>
         <TouchableHighlight onPress={this.showDummyBgJobStatus.bind(this)}>
           <Text>Show BG Status of Dummy Jobs</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this.showBgStatus.bind(this)}>
+          <Text>Check BG Status</Text>
         </TouchableHighlight>
         <Text>Queue State - {this.state.queueState}</Text>
         <Text>Queue Seed - {this.state.queueNumber}</Text>

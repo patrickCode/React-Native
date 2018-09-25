@@ -13,7 +13,7 @@ export class Queue {
         this._queue.addWorker('create-dummy-entry', async (id, payload) => {
             let currentDate = new Date();
             let dataToBeAdded = `Date - ${currentDate.toString()}. ID - ${id.toString()}. Payload - ${JSON.stringify(payload)}`;
-            await this.sleep(15000);
+            await this.sleep(5000);
             let currentJobStatus = await AsyncStorage.getItem("dummyJobStatus");
             if (currentJobStatus === undefined || currentJobStatus === null) {
                 currentJobStatus = dataToBeAdded;
@@ -36,14 +36,7 @@ export class Queue {
             var questions: any = (await response.json());
 
             await AsyncStorage.setItem("questionList", JSON.stringify(questions));
-            // if (availableQuestionsStr === undefined || availableQuestionsStr === null) {
-            //     await AsyncStorage.setItem("questionList", JSON.stringify(questions));
-            // } else {
-            //     if (JSON.parse(availableQuestionsStr) !== questions) {
-            //         await AsyncStorage.setItem("questionList", JSON.stringify(questions));
-            //     }
-            // }
-            
+
             await AsyncStorage.setItem("randomSeed", this.createRandomNumber(10000).toString());
             await AsyncStorage.setItem("OperationInProgress", "False");
         });
@@ -52,11 +45,23 @@ export class Queue {
     public AddJob(pageNumber: number, startImmediately: boolean = true): void {
         this._queue.createJob('get-questions-job', {
             pagenumber: pageNumber
-        }, {}, startImmediately);
+        }, { attempts: 5, timeout: 20000 }, startImmediately);
     }
 
-    public AddDummyJob(payload:any, startImmediately: boolean = false): void {
-        this._queue.createJob('create-dummy-entry', payload, {}, startImmediately);
+    public AddDummyJob(payload: any, startImmediately: boolean = false): void {
+        this._queue.createJob('create-dummy-entry', payload, { attempts: 5, timeout: 10000 }, startImmediately);
+    }
+
+    public async SimulateJobAddition(): Promise<void> {
+        await this.CreateDummyProcessingJob();
+        await this.CreateProcessingJob();
+
+        this.AddJob(0, false);
+        this.AddDummyJob({ "Some_Data_1": "Some_Value_1" }, false);
+        this.AddDummyJob({ "Some_Data_2": "Some_Value_2" }, false);
+        this.AddDummyJob({ "Some_Data_3": "Some_Value_3" }, false);
+        this.AddDummyJob({ "Some_Data_4": "Some_Value_4" }, false);
+        this.AddDummyJob({ "Some_Data_5": "Some_Value_5" }, false);
     }
 
     public async StartProcessing(timeout: number = 30000): Promise<void> {
