@@ -40,8 +40,8 @@
 		7E4FAF6B497F4A2BA1A71AC6 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A0AC5E949E004829AE8F230D /* libRealmReact.a */; };
 		CC14D95FDBCE402B8FFE6916 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 10E43126C34C4DC28E933F29 /* libc++.tbd */; };
 		6CB02D68A2354F5685194D39 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B5D98C4960A4B04927FCD5A /* libz.tbd */; };
-		4BAEA5686D19442DBA028923 /* libWorkers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 984457DA141E491BB21272F6 /* libWorkers.a */; };
 		81A61A6BAD9C415B85DD61FA /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2B8EB5271474DBD860FC6DD /* libRNBackgroundFetch.a */; };
+		230218E6B84641049B58CD71 /* libRNThread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 908DAC3F7979498DB1E10137 /* libRNThread.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -351,10 +351,10 @@
 		A0AC5E949E004829AE8F230D /* libRealmReact.a */ = {isa = PBXFileReference; name = "libRealmReact.a"; path = "libRealmReact.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		10E43126C34C4DC28E933F29 /* libc++.tbd */ = {isa = PBXFileReference; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
 		1B5D98C4960A4B04927FCD5A /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
-		DB569C4C8783432186CB832C /* Workers.xcodeproj */ = {isa = PBXFileReference; name = "Workers.xcodeproj"; path = "../node_modules/react-native-workers/ios/Workers.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		984457DA141E491BB21272F6 /* libWorkers.a */ = {isa = PBXFileReference; name = "libWorkers.a"; path = "libWorkers.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		4483553A0861462EB7088DA1 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; name = "RNBackgroundFetch.xcodeproj"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		A2B8EB5271474DBD860FC6DD /* libRNBackgroundFetch.a */ = {isa = PBXFileReference; name = "libRNBackgroundFetch.a"; path = "libRNBackgroundFetch.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		24D41B9554E24B5DA33C388E /* RNThread.xcodeproj */ = {isa = PBXFileReference; name = "RNThread.xcodeproj"; path = "../node_modules/react-native-threads/ios/RNThread.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		908DAC3F7979498DB1E10137 /* libRNThread.a */ = {isa = PBXFileReference; name = "libRNThread.a"; path = "libRNThread.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -385,8 +385,8 @@
 				7E4FAF6B497F4A2BA1A71AC6 /* libRealmReact.a in Frameworks */,
 				CC14D95FDBCE402B8FFE6916 /* libc++.tbd in Frameworks */,
 				6CB02D68A2354F5685194D39 /* libz.tbd in Frameworks */,
-				4BAEA5686D19442DBA028923 /* libWorkers.a in Frameworks */,
 				81A61A6BAD9C415B85DD61FA /* libRNBackgroundFetch.a in Frameworks */,
+				230218E6B84641049B58CD71 /* libRNThread.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,8 +576,8 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				575BB524DC9B4AD2BD118D06 /* RealmReact.xcodeproj */,
-				DB569C4C8783432186CB832C /* Workers.xcodeproj */,
 				4483553A0861462EB7088DA1 /* RNBackgroundFetch.xcodeproj */,
+				24D41B9554E24B5DA33C388E /* RNThread.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1206,14 +1206,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
-					"$(SRCROOT)\..\node_modules\react-native-workers\ios\Workers",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 				);
 			};
 			name = Debug;
@@ -1236,14 +1234,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
-					"$(SRCROOT)\..\node_modules\react-native-workers\ios\Workers",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 				);
 			};
 			name = Release;
@@ -1267,8 +1263,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
-					"$(SRCROOT)\..\node_modules\react-native-workers\ios\Workers",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 				);
 			};
 			name = Debug;
@@ -1291,8 +1287,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
-					"$(SRCROOT)\..\node_modules\react-native-workers\ios\Workers",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 				);
 			};
 			name = Release;
@@ -1323,14 +1319,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
-					"$(SRCROOT)\..\node_modules\react-native-workers\ios\Workers",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 				);
 			};
 			name = Debug;
@@ -1361,14 +1355,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
-					"$(SRCROOT)\..\node_modules\react-native-workers\ios\Workers",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 				);
 			};
 			name = Release;
@@ -1398,14 +1390,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
-					"$(SRCROOT)\..\node_modules\react-native-workers\ios\Workers",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 				);
 			};
 			name = Debug;
@@ -1435,14 +1425,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\realm\src/**",
-					"$(SRCROOT)\..\node_modules\react-native-workers\ios\Workers",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 				);
 			};
 			name = Release;

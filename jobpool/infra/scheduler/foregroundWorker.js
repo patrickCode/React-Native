@@ -1,0 +1,32 @@
+import { self } from "react-native-threads";
+self.onmessage = (message) => {
+    let runParameters = JSON.parse(message);
+    let poolManager = runParameters.JobPoolManager;
+    let runtimeSettings = runParameters.PoolRuntimeSettings;
+    runtimeSettings.Notify = jobCompletionNotification;
+    let jobs = runParameters.Jobs;
+    jobs.forEach(job => poolManager.DefineJob(job));
+    poolManager.Execute(runtimeSettings)
+        .then(() => {
+        let completionMessage = {
+            "MessageType": "POOL_SUSPENDED"
+        };
+        self.postMessage(JSON.stringify(completionMessage));
+    })
+        .catch((err) => {
+        let errorMessage = {
+            "MessageType": "POOL_ERROR"
+        };
+        self.postMessage(JSON.stringify(errorMessage));
+    });
+};
+let jobCompletionNotification = (jobId, jobName, jobRunStatus) => {
+    let notificationMessage = {
+        "MessageType": "JOB_COMPLETED",
+        "JobId": jobId,
+        "JobName": jobName,
+        "RunStatus": jobRunStatus
+    };
+    self.postMessage(JSON.stringify(notificationMessage));
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZm9yZWdyb3VuZFdvcmtlci5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbImZvcmVncm91bmRXb3JrZXIudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRUEsT0FBTyxFQUFFLElBQUksRUFBRSxNQUFNLHNCQUFzQixDQUFDO0FBRTVDLElBQUksQ0FBQyxTQUFTLEdBQUcsQ0FBQyxPQUFPLEVBQUUsRUFBRTtJQUN6QixJQUFJLGFBQWEsR0FBNkIsSUFBSSxDQUFDLEtBQUssQ0FBQyxPQUFPLENBQUMsQ0FBQztJQUNsRSxJQUFJLFdBQVcsR0FBRyxhQUFhLENBQUMsY0FBYyxDQUFDO0lBQy9DLElBQUksZUFBZSxHQUFHLGFBQWEsQ0FBQyxtQkFBbUIsQ0FBQztJQUN4RCxlQUFlLENBQUMsTUFBTSxHQUFHLHlCQUF5QixDQUFDO0lBRW5ELElBQUksSUFBSSxHQUFHLGFBQWEsQ0FBQyxJQUFJLENBQUM7SUFDOUIsSUFBSSxDQUFDLE9BQU8sQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLFdBQVcsQ0FBQyxTQUFTLENBQUMsR0FBRyxDQUFDLENBQUMsQ0FBQztJQUVoRCxXQUFXLENBQUMsT0FBTyxDQUFDLGVBQWUsQ0FBQztTQUMvQixJQUFJLENBQUMsR0FBRyxFQUFFO1FBQ1AsSUFBSSxpQkFBaUIsR0FBRztZQUNwQixhQUFhLEVBQUUsZ0JBQWdCO1NBQ2xDLENBQUM7UUFDRixJQUFJLENBQUMsV0FBVyxDQUFDLElBQUksQ0FBQyxTQUFTLENBQUMsaUJBQWlCLENBQUMsQ0FBQyxDQUFDO0lBQ3hELENBQUMsQ0FBQztTQUNELEtBQUssQ0FBRSxDQUFDLEdBQUcsRUFBRSxFQUFFO1FBQ1osSUFBSSxZQUFZLEdBQUc7WUFDZixhQUFhLEVBQUUsWUFBWTtTQUM5QixDQUFDO1FBQ0YsSUFBSSxDQUFDLFdBQVcsQ0FBQyxJQUFJLENBQUMsU0FBUyxDQUFDLFlBQVksQ0FBQyxDQUFDLENBQUM7SUFDbkQsQ0FBQyxDQUFDLENBQUM7QUFDWCxDQUFDLENBQUE7QUFFRCxJQUFJLHlCQUF5QixHQUFHLENBQUMsS0FBYSxFQUFFLE9BQWUsRUFBRSxZQUEwQixFQUFFLEVBQUU7SUFDM0YsSUFBSSxtQkFBbUIsR0FBRztRQUN0QixhQUFhLEVBQUUsZUFBZTtRQUM5QixPQUFPLEVBQUUsS0FBSztRQUNkLFNBQVMsRUFBRSxPQUFPO1FBQ2xCLFdBQVcsRUFBRSxZQUFZO0tBQzVCLENBQUM7SUFDRixJQUFJLENBQUMsV0FBVyxDQUFDLElBQUksQ0FBQyxTQUFTLENBQUMsbUJBQW1CLENBQUMsQ0FBQyxDQUFDO0FBQzFELENBQUMsQ0FBQSJ9

@@ -3,7 +3,7 @@ import { IDatabase, RealmDbConfiguration, IDbObjectTranslator } from "./database
 
 export class RealmDatabase<T> implements IDatabase<T> {
 
-    private _objectTranslator: IDbObjectTranslator = null;
+    private _objectTranslator: IDbObjectTranslator<T> = null;
     private _realmObjectType: string;
     static RealmInstance: Realm = null;
     
@@ -34,35 +34,35 @@ export class RealmDatabase<T> implements IDatabase<T> {
     }
 
     //Works with the assumption that id field is present in your object
-    async Get<T>(id: number | string): Promise<T> {
+    async Get(id: number | string): Promise<T> {
         let realmObjects = RealmDatabase.RealmInstance.objectForPrimaryKey(this._realmObjectType, id);
-        let translatedObjects = this._objectTranslator.TranslateFromDb<T>(realmObjects);
+        let translatedObjects = this._objectTranslator.TranslateFromDb(realmObjects);
         return translatedObjects;
     }
 
-    async GetAll<T>(): Promise<T[]> {
+    async GetAll(): Promise<T[]> {
         let realmObjects = RealmDatabase.RealmInstance.objects(this._realmObjectType);
-        let translatedObjects = this._objectTranslator.TranslateListFromDb<T>(realmObjects);
+        let translatedObjects = this._objectTranslator.TranslateListFromDb(realmObjects);
         return translatedObjects;
     }
 
-    async Filter<T>(filterString: string): Promise<T[]> {
+    async Filter(filterString: string): Promise<T[]> {
         let realmObjects = RealmDatabase.RealmInstance.objects(this._realmObjectType);
         let filteredData = realmObjects.filtered(filterString);
-        let translatedObjects = this._objectTranslator.TranslateListFromDb<T>(filteredData);
+        let translatedObjects = this._objectTranslator.TranslateListFromDb(filteredData);
         return translatedObjects;
     }
 
-    async Upsert<T>(data: T): Promise<any> {
-        let realmObject = this._objectTranslator.TranslateToDbObj<T>(data);
+    async Upsert(data: T): Promise<any> {
+        let realmObject = this._objectTranslator.TranslateToDbObj(data);
         RealmDatabase.RealmInstance.write(() => {
             RealmDatabase.RealmInstance.create(this._realmObjectType, realmObject, true);
         });
     }
 
-    async Delete<T>(id: string | number): Promise<T> {
+    async Delete(id: string | number): Promise<T> {
         let realmObject = RealmDatabase.RealmInstance.objectForPrimaryKey(this._realmObjectType, id);
-        let translatedObject = this._objectTranslator.TranslateFromDb<T>(realmObject);
+        let translatedObject = this._objectTranslator.TranslateFromDb(realmObject);
         if (translatedObject !== null && translatedObject !== undefined) {
             RealmDatabase.RealmInstance.write(() => {
                 RealmDatabase.RealmInstance.create(this._realmObjectType, realmObject, true);

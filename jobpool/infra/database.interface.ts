@@ -1,21 +1,21 @@
 export interface IDatabase<T> {
     Connect(configuration: DatabaseConfiguration): Promise<any>
-    Get<T>(id: any): Promise<T>
-    GetAll<T>(): Promise<Array<T>>
-    Filter<T>(filterString: string): Promise<Array<T>>
-    Upsert<T>(data: T): Promise<any>
-    Delete<T>(id: any): Promise<T>
+    Get(id: any): Promise<T>
+    GetAll(): Promise<Array<T>>
+    Filter(filterString: string): Promise<Array<T>>
+    Upsert(data: T): Promise<any>
+    Delete(id: any): Promise<T>
 }
 
 export interface DatabaseConfiguration {
     DatabaseName: string,
-    Translator: IDbObjectTranslator
+    Translator: IDbObjectTranslator<any>
 }
 
-export interface IDbObjectTranslator { 
-    TranslateFromDb<T>(dbObj: any): T
-    TranslateListFromDb<T>(dbObj: any): Array<T>
-    TranslateToDbObj<T>(obj: T): any
+export interface IDbObjectTranslator<T> { 
+    TranslateFromDb(dbObj: any): T
+    TranslateListFromDb(dbObj: any): Array<T>
+    TranslateToDbObj(obj: T): any
 }
 
 //TODO: Should be in a different file

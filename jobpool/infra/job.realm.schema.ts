@@ -9,7 +9,8 @@ export const JobSchema: Realm.ObjectSchema = {
         Partner: 'string',
         Priority: 'number',
         RuntimeSettings: 'string',
-        Payload: 'string'
+        Payload: 'string',
+        CreatedOn: 'string'
     }
 }
 
@@ -18,7 +19,8 @@ export const JobStatusSchema: Realm.ObjectSchema = {
     primaryKey: "Id",
     properties: {
         Id: 'string',
-        RunHistory: 'string'
+        RunHistory: 'string',
+        IsActive: 'boolean'
     }
 }
 
@@ -27,6 +29,7 @@ export const JobPoolSchema: Realm.ObjectSchema = {
     primaryKey: "Id",
     properties: {
         Id: 'string',
+        JobQueue: 'string',
         ActiveJobId: 'string'
     }
 }
