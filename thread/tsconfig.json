@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "moduleResolution": "node",
+      "jsx": "react-native",
+      "allowSyntheticDefaultImports": true,
+      "inlineSourceMap": true,
+      "skipLibCheck": true,
+      "pretty": true,
+      "baseUrl": ".",
+      "rootDir": "."
+    },
+    "exclude": ["node_modules/**/*"]
+  }
+  

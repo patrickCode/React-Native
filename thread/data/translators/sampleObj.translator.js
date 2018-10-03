@@ -1,0 +1,22 @@
+export class SampleObjTranslator {
+    TranslateFromDb(dbObj) {
+        return {
+            Id: dbObj.Id,
+            Name: dbObj.Name
+        };
+    }
+    TranslateListFromDb(dbObj) {
+        let jobPools = new Array();
+        dbObj.forEach(element => {
+            jobPools.push(this.TranslateFromDb(element));
+        });
+        return jobPools;
+    }
+    TranslateToDbObj(obj) {
+        return {
+            Id: obj.Id,
+            Name: obj.Name
+        };
+    }
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2FtcGxlT2JqLnRyYW5zbGF0b3IuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJzYW1wbGVPYmoudHJhbnNsYXRvci50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFHQSxNQUFNLE9BQU8sbUJBQW1CO0lBRTVCLGVBQWUsQ0FBQyxLQUFVO1FBQ3RCLE9BQU87WUFDSCxFQUFFLEVBQUUsS0FBSyxDQUFDLEVBQUU7WUFDWixJQUFJLEVBQUUsS0FBSyxDQUFDLElBQUk7U0FDbkIsQ0FBQTtJQUNMLENBQUM7SUFFRCxtQkFBbUIsQ0FBQyxLQUFVO1FBQzFCLElBQUksUUFBUSxHQUFHLElBQUksS0FBSyxFQUFhLENBQUM7UUFDdEMsS0FBSyxDQUFDLE9BQU8sQ0FBQyxPQUFPLENBQUMsRUFBRTtZQUNwQixRQUFRLENBQUMsSUFBSSxDQUFDLElBQUksQ0FBQyxlQUFlLENBQUMsT0FBTyxDQUFDLENBQUMsQ0FBQztRQUNqRCxDQUFDLENBQUMsQ0FBQztRQUNILE9BQU8sUUFBUSxDQUFDO0lBQ3BCLENBQUM7SUFFRCxnQkFBZ0IsQ0FBQyxHQUFjO1FBQzNCLE9BQU87WUFDSCxFQUFFLEVBQUUsR0FBRyxDQUFDLEVBQUU7WUFDVixJQUFJLEVBQUUsR0FBRyxDQUFDLElBQUk7U0FDakIsQ0FBQTtJQUNMLENBQUM7Q0FDSiJ9
