@@ -1,5 +1,5 @@
-import { JobRunStatus } from "../job.interface";
-import { SchedulerRuntimeSettings } from "./scheduler.interface";
+import { JobRunStatus } from "job.interface";
+import { SchedulerRuntimeSettings } from "scheduler.interface";
 import { self } from "react-native-threads";
 
 self.onmessage = (message) => {

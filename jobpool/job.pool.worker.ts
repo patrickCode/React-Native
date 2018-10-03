@@ -1,4 +1,4 @@
-import { Job, RuntimeSetting } from "./job.interface";
+import { Job, RuntimeSetting } from "job.interface";
 
 export class JobPoolWorker {
 

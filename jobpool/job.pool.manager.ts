@@ -1,7 +1,7 @@
-import { RealmDatabase } from "./realm.database";
-import { JobPoolWorker } from "./job.pool.worker";
-import { IDatabase, DatabaseConfiguration } from "./database.interface";
-import { Job, JobStatus, JobRunStatus, IJobPoolManager, RuntimeSetting, JobPool, PooledJob } from "./job.interface";
+import { RealmDatabase } from "realm.database";
+import { JobPoolWorker } from "job.pool.worker";
+import { IDatabase, DatabaseConfiguration } from "database.interface";
+import { Job, JobStatus, JobRunStatus, IJobPoolManager, RuntimeSetting, JobPool, PooledJob } from "job.interface";
 
 export class JobPoolManager implements IJobPoolManager {
 
@@ -85,28 +85,35 @@ export class JobPoolManager implements IJobPoolManager {
     }
 
     async ScheduleJobs(): Promise<void> {
+        try {
         let currentJobs = await this._jobDatabase.GetAll();
-        let sortedJobs = currentJobs.sort((a, b) => {
-            if (a.Priority > b.Priority)
-                return 1;
-            else if (b.Priority > a.Priority)
-                return -1;
-            else {
-                if (a.CreatedOn > b.CreatedOn)
+        alert(JSON.stringify(currentJobs));
+            let sortedJobs = currentJobs.sort((a, b) => {
+                if (a.Priority > b.Priority)
                     return 1;
-                else if (b.CreatedOn > a.CreatedOn)
+                else if (b.Priority > a.Priority)
                     return -1;
-            }
-            return 0;
-        });
-        let pooledJobs: Array<PooledJob> = [];
-        sortedJobs.forEach(job => {
-            pooledJobs.push(this.CreatePooledJob(job));
-        });
+                else {
+                    if (a.CreatedOn > b.CreatedOn)
+                        return 1;
+                    else if (b.CreatedOn > a.CreatedOn)
+                        return -1;
+                }
+                return 0;
+            });
+            let pooledJobs: Array<PooledJob> = [];
+            sortedJobs.forEach(job => {
+                pooledJobs.push(this.CreatePooledJob(job));
+            });
 
-        let currentJobPool = await this._jobPoolDatabase.Get(this._poolName);
-        currentJobPool.JobQueue = pooledJobs;
-        await this._jobPoolDatabase.Upsert(currentJobPool);
+            let currentJobPool = await this._jobPoolDatabase.Get(this._poolName);
+            currentJobPool.JobQueue = pooledJobs;
+            await this._jobPoolDatabase.Upsert(currentJobPool);
+        } catch (err) {
+            alert("3. " + JSON.stringify(err));
+            //throw err;
+        }
+
     }
 
     private CreatePooledJob(job: Job): PooledJob {

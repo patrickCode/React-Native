@@ -1,8 +1,9 @@
 import { DummyAsyncStorageJob } from './dummyAsyncStorageJob';
-import { Job, TimeUnit } from 'infra/job.interface';
+//import { Job, TimeUnit } from 'job.interface';
 import { GetQuestion } from './getQuestionsJob';
 
-export const Jobs: Array<Job> = [{
+//export const Jobs: Array<Job> = [{
+export const Jobs: Array<any> = [{
     Name: "DummyAsyncStorageJob",
     Id: "1",
     JobDefinition: new DummyAsyncStorageJob().Execute,
@@ -12,7 +13,8 @@ export const Jobs: Array<Job> = [{
     RuntimeSettings: {
         RetryAttempt: 3,
         Schedule: {
-            Unit: TimeUnit.Minute,
+            //Unit: TimeUnit.Minute,
+            Unit: 1,
             Value: 15
         },
         Timeout: 10000
@@ -28,7 +30,8 @@ export const Jobs: Array<Job> = [{
     RuntimeSettings: {
         RetryAttempt: 3,
         Schedule: {
-            Unit: TimeUnit.Hour,
+            //Unit: TimeUnit.Hour,
+            Unit: 1,
             Value: 15
         },
         Timeout: 15000

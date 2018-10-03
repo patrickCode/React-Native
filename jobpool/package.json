@@ -4,14 +4,16 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "node node_modules/react-native/local-cli/cli.js start --reset-cache",
     "watch": "tsc -w",
-    "test": "jest",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "tcp": "adb reverse tcp:8081 tcp:8081",
     "menu": "adb shell input keyevent 82",
-    "buildReload": "tsc && adb shell input text 'RR'"
+    "buildReload": "tsc && adb shell input text 'RR'",
+    "buildThreadAndroid": "node node_modules/react-native/local-cli/cli.js bundle --dev false --assets-dest ./android/app/src/main/res/ --entry-file index.thread.js --platform android --bundle-output ./android/app/src/main/assets/threads/index.thread.bundle",
+    "buildThreadIOS": "node node_modules/react-native/local-cli/cli.js bundle --dev false --assets-dest ./ios --entry-file index.thread.js --platform ios --bundle-output ./ios/index.thread.jsbundle"
+
   },
   "dependencies": {
     "@types/react": "16.3.14",
@@ -24,13 +26,5 @@
     "realm": "^2.16.2",
     "typescript": "^3.1.1"
   },
-  "devDependencies": {
-    "babel-jest": "23.6.0",
-    "jest": "23.6.0",
-    "metro-react-native-babel-preset": "0.46.0",
-    "react-test-renderer": "16.5.0"
-  },
-  "jest": {
-    "preset": "react-native"
-  }
+  "devDependencies": {}
 }

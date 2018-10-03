@@ -1,5 +1,5 @@
 import Realm from 'realm';
-import { IDatabase, RealmDbConfiguration, IDbObjectTranslator } from "./database.interface";
+import { IDatabase, RealmDbConfiguration, IDbObjectTranslator } from "database.interface";
 
 export class RealmDatabase<T> implements IDatabase<T> {
 

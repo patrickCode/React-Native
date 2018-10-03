@@ -1,12 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, AsyncStorage, TouchableHighlight, FlatList, AppRegistry } from 'react-native';
-import { ForegrounScheduler } from './infra/scheduler/foreground.scheduler';
-import { CacheLogger } from 'infra/cache.logger';
+import { ForegrounScheduler } from './foreground.scheduler';
 
 type Props = {};
 export default class App extends Component<Props, any> {
   private foregroundScheduler: ForegrounScheduler;
-  
+
   constructor(props) {
     super(props);
     this.foregroundScheduler = new ForegrounScheduler();
@@ -24,8 +23,8 @@ export default class App extends Component<Props, any> {
       .then(() => {
         this.foregroundScheduler.Start(60000);
         this.startChecking();
-      }).catch ((err) => {
-        alert("There was error in initializing the foreground scheduler");
+      }).catch((err) => {
+        //alert("There was error in initializing the foreground scheduler: " + JSON.stringify(err));
       })
 
   }
@@ -35,20 +34,31 @@ export default class App extends Component<Props, any> {
       .then((questionsStr) => {
         if (questionsStr) {
           let questions = JSON.parse(questionsStr);
-          this.setState({"questions": questions})
+          this.setState({ "questions": questions })
         }
       });
   }
 
+  async GetAllLogs(): Promise<Array<any>> {
+    let loggedString = await AsyncStorage.getItem("Logs");
+    if (loggedString === undefined || loggedString === null)
+      return [];
+    return JSON.parse(loggedString) as Array<any>;
+  }
+
+  async DeleteLogs(): Promise<void> {
+    await AsyncStorage.setItem("Logs", null);
+  }
+
   updateLogs() {
-    return CacheLogger.GetAllLogs()
+    return this.GetAllLogs()
       .then((logs) => {
-          this.setState({"logs": logs})
+        this.setState({ "logs": logs })
       });
   }
 
   deleteLogs() {
-    return CacheLogger.DeleteLogs()
+    return this.DeleteLogs()
       .then(() => {
         this.updateLogs();
       })
@@ -56,9 +66,9 @@ export default class App extends Component<Props, any> {
 
   udpateDummyData() {
     AsyncStorage.getItem("Dummy-Cache-Entry")
-    .then((dummyData) => {
-      this.setState({"dummyData": dummyData});
-    });
+      .then((dummyData) => {
+        this.setState({ "dummyData": dummyData });
+      });
   }
 
   startChecking() {
@@ -73,14 +83,14 @@ export default class App extends Component<Props, any> {
 
   checkData() {
     this.setState({
-     "updateStatus": "Updating" 
+      "updateStatus": "Updating"
     });
     return Promise.all([this.updateLogs(), this.updateQuestions(), this.udpateDummyData()])
       .then((result) => {
         this.setState({
           "updateStatus": "Data Updated last at " + new Date().toString()
-         });
-         alert("Data refreshed");
+        });
+        alert("Data refreshed");
       })
   }
 
@@ -88,7 +98,7 @@ export default class App extends Component<Props, any> {
     return (
       <View style={styles.container}>
         <Text style={styles.heading}>Job Pool</Text>
-        
+
         <Text style={styles.instructions}>Logs</Text>
         <FlatList
           data={this.state.logs}
@@ -105,6 +115,10 @@ export default class App extends Component<Props, any> {
       </View>
     );
   }
+}
+
+export const registerComponent = () => {
+  AppRegistry.registerComponent("jobpool", () => App);
 }
 
 const styles = StyleSheet.create({
