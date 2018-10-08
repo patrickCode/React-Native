@@ -1,118 +1,199 @@
 import React, { Component } from 'react';
-import {
-  Button,
-  StyleSheet,
-  Text,
-  View,
-  AsyncStorage,
-  AdSupportIOS
-} from 'react-native';
-import { Thread } from 'react-native-threads';
-import { RealmDatabase } from './data/realm.database';
-import { IDatabase, RealmDbConfiguration } from 'data/database.interface';
-import { SampleObj } from 'data/job.interface';
-import { SampleObjTranslator } from './data/translators/sampleObj.translator';
-import { SampleObjSchema } from './data/job.realm.schema';
+import { ForegrounScheduler } from './data/foreground.scheduler';
+import { StyleSheet, Text, View, AsyncStorage, FlatList, AppRegistry, Button } from 'react-native';
+import { CacheLogger } from './data/cache.logger';
+import BackgroundTask from 'react-native-background-task';
 
-export default class App extends Component {
-  state = { messages: [], cachedMessages: [] }
+BackgroundTask.define(async () => {
+  await CacheLogger.Log("[Dummy Storage BG Job]: Job Started");
+  let text = "Cache updated in the background";
+  await AsyncStorage.getItem("Dummy-BG-Cache-Entry")
+    .then(async (cachedData: any) => {
+      CacheLogger.Log("[Dummy BG Storage Job]: Cache updating");
+      let data = (cachedData !== undefined && cachedData !== null) ? JSON.parse(cachedData) : { timestamp: null, version: 0, text: "" };
+      data.timestamp = new Date().toUTCString();
+      data.version = data.version + 1;
+      data.text = text;
+      await AsyncStorage.setItem("Dummy-BG-Cache-Entry", JSON.stringify(data));
+      CacheLogger.Log("[Dummy Storage BG Job]: Cache updated");
+    });
+  await CacheLogger.Log("[Dummy Storage BG Job]: Job completed");
+
+  BackgroundTask.finish();
+});
+
+type Props = {};
+export default class App extends Component<Props, any> {
+  private foregroundScheduler: ForegrounScheduler;
 
   constructor(props) {
     super(props);
-    this.addNewObj = this.addNewObj.bind(this);
-    this.showAllData = this.showAllData.bind(this);
+    this.foregroundScheduler = new ForegrounScheduler();
+    this.state = {
+      "questions": [],
+      "logs": [],
+      "dummyData": "",
+      "dummyDataBG": "",
+      "updateStatus": "Initalized"
+    }
+    this.checkData = this.checkData.bind(this);
+    this.DeleteLogs = this.DeleteLogs.bind(this);
   }
 
-  workerThread = null;
-  database: IDatabase<SampleObj> = null;
-  count: number = 1;
+  Initialize() {
+    this.foregroundScheduler.Intialize()
+      .then(() => {
+        this.foregroundScheduler.Start(35000);
+        this.startChecking();
+      });
+  }
+
+  InitializeBackgroundJob() {
+    // BackgroundTask.schedule({
+    //   period: 900
+    // });
+    BackgroundTask.schedule();
+    this.checkBgStatus();
+  }
+
+  async checkBgStatus() {
+    const status = await BackgroundTask.statusAsync()
+
+    if (status.available) {
+      return
+    }
+
+    const reason = status.unavailableReason
+    if (reason === BackgroundTask.UNAVAILABLE_DENIED) {
+      alert("Please enable background Background App Refresh for this app")
+    } else if (reason === BackgroundTask.UNAVAILABLE_RESTRICTED) {
+      alert('Background tasks are restricted on your device');
+    }
+  }
 
   componentDidMount() {
-    this.workerThread = new Thread('./worker.thread.js');
-    this.workerThread.onmessage = this.handleMessage;
-
-    
-    let config: RealmDbConfiguration = {
-      DatabaseName: "SampleObj",
-      Schemas: [SampleObjSchema],
-      SchemaVersion: 0,
-      Translator: new SampleObjTranslator()
-    }
-    this.database = new RealmDatabase(config);
-    this.database.Connect()
-      .then(() => {
-        alert("Database is ready");
-      });
+    //this.Initialize();
+    this.InitializeBackgroundJob();
   }
 
   componentWillUnmount() {
-    this.workerThread.terminate();
-    this.workerThread = null;
+    if (this.foregroundScheduler)
+      this.foregroundScheduler.TerminateWorker();
   }
 
-  handleMessage = message => {
-    this.setState({messages: [this.state.messages, message]});
-    AsyncStorage.getItem("Some_Data")
-      .then((data) => {
-        this.setState({cachedMessages: [this.state.cachedMessages, data]});
+  updateQuestions() {
+    return AsyncStorage.getItem("questions")
+      .then((questionsStr) => {
+        if (questionsStr) {
+          let questions = JSON.parse(questionsStr);
+          this.setState({ "questions": questions })
+        }
       });
   }
 
-  addNewObj() {
-    try {
-      alert("Here");
-      let obj: SampleObj = {
-        Id: "UI Thread: " + this.count.toString(),
-        Name: "Some random name"
-      }
-      this.count++;
-      this.database.Upsert(obj)
-        .then(() => {
-          alert("Data has been added");
-        });
-    } catch (eee) {
-      alert(JSON.stringify(eee));
-      throw eee;
+  async GetAllLogs(): Promise<Array<any>> {
+    return CacheLogger.GetAllLogs();
+  }
+
+  async DeleteLogs(): Promise<void> {
+    await AsyncStorage.setItem("Logs", null);
+  }
+
+  updateLogs() {
+    return this.GetAllLogs()
+      .then((logs) => {
+        this.setState({ "logs": logs })
+      });
+  }
+
+  deleteLogs() {
+    return this.DeleteLogs()
+      .then(() => {
+        this.updateLogs();
+      })
+  }
+
+  udpateDummyData() {
+    return AsyncStorage.getItem("Dummy-Cache-Entry")
+      .then((dummyData) => {
+
+        this.setState({ "dummyData": dummyData });
+      });
+  }
+
+  udpateBgDummyData() {
+    return AsyncStorage.getItem("Dummy-BG-Cache-Entry")
+      .then((dummyData) => {
+        alert("Data for BG - " + dummyData);
+        this.setState({ "dummyDataBG": dummyData });
+      });
+  }
+
+  startChecking() {
+    let check = () => {
+      return new Promise((res, rej) => {
+        this.checkData()
+          .then(() => {
+            setTimeout(check, 10000);
+          });
+      });
     }
-    
+    check();
   }
 
-  showAllData() {
-    this.database.GetAll()
-      .then((data) => {
-        alert(JSON.stringify(data))
-      });
+  checkData() {
+    this.setState({
+      "updateStatus": "Checking Data"
+    });
+
+    try {
+      return Promise.all([this.updateLogs(), this.updateQuestions(), this.udpateBgDummyData(), this.udpateDummyData()])
+        .then((result) => {
+          this.setState({
+            "updateStatus": "Data Updated last at " + new Date().toString()
+          });
+        })
+        .catch((err) => {
+          alert("Err in checking");
+        })
+    } catch (Err) {
+      alert("Err in checking 2");
+    }
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native Threads!
-        </Text>
-
-        <Button title="Update cache from thread" onPress={() => {
-          this.workerThread.postMessage(JSON.stringify({type: 'CACHE'}))
-        }} />
-        <Button title="Add data from thread" onPress={() => {
-          this.workerThread.postMessage(JSON.stringify({type: 'DATABASE'}))
+        <Text style={styles.heading}>Job Pool</Text>
+        <Button title="Check Data" onPress={() => {
+          this.checkData();
         }} />
 
-        <Button title="Add a new object" onPress={() => {
-          this.addNewObj();
+        {/* <Button title="Re-Run Foreground Job" onPress={() => {
+          this.Initialize();
+        }} /> */}
+
+        <Button title="Delete Logs" onPress={() => {
+          this.DeleteLogs();
         }} />
 
-        <Button title="Show all objects" onPress={() => {
-          this.showAllData();
-        }} />
+        <Text style={styles.instructions}>Status - {this.state.updateStatus}</Text>
+        <Text style={styles.instructions}>Dummy Cache Data [FG] - {this.state.dummyData}</Text>
+        <Text style={styles.instructions}>Dummy Cache Data [BG] - {this.state.dummyDataBG}</Text>
 
-        <View>
-          <Text>Messages:</Text>
-          {this.state.messages.map((message, i) => <Text key={i}>{message}</Text>)}
+        <Text style={styles.instructions}>Logs</Text>
+        <FlatList
+          data={this.state.logs}
+          keyExtractor={(item: any) => item.Date}
+          renderItem={({ item }) => <Text>{item.Message}</Text>}
+        />
 
-          <Text>Cached Messages:</Text>
-          {this.state.cachedMessages.map((message, i) => <Text key={i}>{message}</Text>)}
-        </View>
+        {/* <Text style={styles.instructions}>Questions</Text>
+        <FlatList
+          data={this.state.questions}
+          keyExtractor={(item: any) => item.id}
+          renderItem={({ item }) => <Text>{item.value}</Text>}
+        /> */}
       </View>
     );
   }
@@ -125,9 +206,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
+  heading: {
+    fontSize: 30,
     textAlign: 'center',
     margin: 10,
-  }
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
 });

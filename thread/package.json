@@ -12,6 +12,7 @@
     "menu": "adb shell input keyevent 82",
     "buildReload": "tsc && adb shell input text 'RR'",
     "buildThreadAndroid": "node node_modules/react-native/local-cli/cli.js bundle --dev false --assets-dest ./android/app/src/main/res/ --entry-file worker.thread.js --platform android --bundle-output ./android/app/src/main/assets/threads/worker.thread.bundle",
+    "buildThreadAndroidDev": "node node_modules/react-native/local-cli/cli.js bundle --dev true --assets-dest ./android/app/src/main/res/ --entry-file worker.thread.js --platform android --bundle-output ./android/app/src/main/assets/threads/worker.thread.bundle",
     "buildThreadIOS": "node node_modules/react-native/local-cli/cli.js bundle --dev false --assets-dest ./ios --entry-file index.thread.js --platform ios --bundle-output ./ios/index.thread.jsbundle"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "@types/react-native": "0.55.1",
     "react": "16.3.1",
     "react-native": "0.54.2",
+    "react-native-background-task": "^0.2.1",
     "react-native-threads": "0.0.13",
     "realm": "^2.17.0",
     "typescript": "^3.1.1"

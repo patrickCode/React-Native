@@ -15,7 +15,7 @@ export class CacheLogger {
             logData.push(logMessage);
             loggedString = JSON.stringify(logData);
         }
-        await AsyncStorage.setItem("Log", loggedString);
+        await AsyncStorage.setItem("Logs", loggedString);
     }
 
     static async GetAllLogs(): Promise<Array<any>> {
