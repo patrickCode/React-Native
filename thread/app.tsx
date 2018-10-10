@@ -3,24 +3,27 @@ import { ForegrounScheduler } from './data/foreground.scheduler';
 import { StyleSheet, Text, View, AsyncStorage, FlatList, AppRegistry, Button } from 'react-native';
 import { CacheLogger } from './data/cache.logger';
 import BackgroundTask from 'react-native-background-task';
+import { BackgroundScheduler } from './data/background.scheduler';
 
-BackgroundTask.define(async () => {
-  await CacheLogger.Log("[Dummy Storage BG Job]: Job Started");
-  let text = "Cache updated in the background";
-  await AsyncStorage.getItem("Dummy-BG-Cache-Entry")
-    .then(async (cachedData: any) => {
-      CacheLogger.Log("[Dummy BG Storage Job]: Cache updating");
-      let data = (cachedData !== undefined && cachedData !== null) ? JSON.parse(cachedData) : { timestamp: null, version: 0, text: "" };
-      data.timestamp = new Date().toUTCString();
-      data.version = data.version + 1;
-      data.text = text;
-      await AsyncStorage.setItem("Dummy-BG-Cache-Entry", JSON.stringify(data));
-      CacheLogger.Log("[Dummy Storage BG Job]: Cache updated");
-    });
-  await CacheLogger.Log("[Dummy Storage BG Job]: Job completed");
+// alert(BackgroundTask.define);
 
-  BackgroundTask.finish();
-});
+// BackgroundTask.define(async () => {
+//   await CacheLogger.Log("[Dummy Storage BG Job]: Job Started");
+//   let text = "Cache updated in the background";
+//   await AsyncStorage.getItem("Dummy-BG-Cache-Entry")
+//     .then(async (cachedData: any) => {
+//       CacheLogger.Log("[Dummy BG Storage Job]: Cache updating");
+//       let data = (cachedData !== undefined && cachedData !== null) ? JSON.parse(cachedData) : { timestamp: null, version: 0, text: "" };
+//       data.timestamp = new Date().toUTCString();
+//       data.version = data.version + 1;
+//       data.text = text;
+//       await AsyncStorage.setItem("Dummy-BG-Cache-Entry", JSON.stringify(data));
+//       await CacheLogger.Log("[Dummy Storage BG Job]: Cache updated");
+//     });
+//   await CacheLogger.Log("[Dummy Storage BG Job]: Job completed");
+
+//   BackgroundTask.finish();
+// });
 
 type Props = {};
 export default class App extends Component<Props, any> {
@@ -53,7 +56,12 @@ export default class App extends Component<Props, any> {
     //   period: 900
     // });
     BackgroundTask.schedule();
-    this.checkBgStatus();
+    var bgScheduler = new BackgroundScheduler();
+    bgScheduler.Initialize()
+      .then(() => {
+        alert("BG scheduler has been initialized");
+        this.checkBgStatus();
+      });
   }
 
   async checkBgStatus() {
